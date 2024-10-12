@@ -1,31 +1,60 @@
 import React from 'react';
-import Chart from 'react-apexcharts';
-import ChartWrapper from './ChartWrapper';
+import { Line } from 'react-chartjs-2';
+import {
+  Chart as ChartJS,
+  LineElement,
+  PointElement,
+  LinearScale,
+  Title,
+  CategoryScale,
+  Tooltip,
+  Legend,
+} from 'chart.js';
+
+// Register required components
+ChartJS.register(LineElement, PointElement, LinearScale, Title, CategoryScale, Tooltip, Legend);
 
 const VisitorsTimeSeries = ({ data }) => {
-  const series = [
-    {
-      name: 'Total Visitors',
-      data: data.map((item) => ({
-        x: new Date(`${item.arrival_date_year}-${item.arrival_date_month}-${item.arrival_date_day_of_month}`).getTime(),
-        y: item.adults + item.children + item.babies,
-      })),
-    },
-  ];
+  const groupedData = data.reduce((acc, booking) => {
+    const date = `${booking.arrival_date_year}-${booking.arrival_date_month}-${booking.arrival_date_day_of_month}`;
+    acc[date] = (acc[date] || 0) + parseInt(booking.adults) + parseInt(booking.children);
+    return acc;
+  }, {});
+
+  const labels = Object.keys(groupedData);
+  const values = Object.values(groupedData);
+
+  const chartData = {
+    labels,
+    datasets: [
+      {
+        label: 'Total Visitors per Day',
+        data: values,
+        borderColor: 'rgba(75,192,192,1)',
+        backgroundColor: 'rgba(75,192,192,0.2)',
+        tension: 0.4,
+        pointRadius: 5,
+      },
+    ],
+  };
 
   const options = {
-    chart: { type: 'line', zoom: { enabled: true } },
-    xaxis: { type: 'datetime' },
-    yaxis: { title: { text: 'Number of Visitors' } },
-    stroke: { curve: 'smooth' },
-    title: { text: 'Visitors per Day', align: 'left' },
-    tooltip: { x: { format: 'dd MMM yyyy' } },
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: true, position: 'top' },
+      tooltip: { enabled: true },
+    },
+    scales: {
+      x: { type: 'category', title: { display: true, text: 'Date' } },
+      y: { title: { display: true, text: 'Number of Visitors' } },
+    },
   };
 
   return (
-    <ChartWrapper title="Visitors Per Day">
-      <Chart options={options} series={series} type="line" height={300} />
-    </ChartWrapper>
+    <div style={{ position: 'relative', height: '400px', width: '100%' }}>
+      <Line data={chartData} options={options} />
+    </div>
   );
 };
 

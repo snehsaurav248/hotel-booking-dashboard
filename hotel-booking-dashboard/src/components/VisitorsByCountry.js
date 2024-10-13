@@ -44,6 +44,30 @@ const VisitorsByCountry = ({ data }) => {
       legend: { display: true, position: 'top' },
       tooltip: { enabled: true },
     },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: 'Country', // X-axis label
+          color: '#4B5563', // Tailwind's gray-700 color
+        },
+        ticks: {
+          color: '#4B5563', // Tailwind's gray-700 color
+          font: { size: 12 },
+        },
+      },
+      y: {
+        title: {
+          display: true,
+          text: 'Number of Visitors',
+          color: '#4B5563', // Tailwind's gray-700 color
+        },
+        ticks: {
+          color: '#4B5563', // Tailwind's gray-700 color
+          font: { size: 12 },
+        },
+      },
+    },
   };
 
   return (

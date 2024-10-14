@@ -57,6 +57,7 @@ Axios: For fetching the dataset.
 Moment.js: For date handling and filtering
 
 CSV Dataset
+
 The CSV dataset (hotel_bookings_1000.csv) contains 1,000 records with the following columns:
 
 arrival_date_year: Year of booking.
